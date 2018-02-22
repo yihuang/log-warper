@@ -5,8 +5,6 @@
 
 -- | Testing module to play with logging.
 
-module Main where
-
 import Universum
 
 #if ( __GLASGOW_HASKELL__ >= 802 )
