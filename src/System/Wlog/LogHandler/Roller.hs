@@ -16,7 +16,7 @@ import Formatting (sformat, shown, (%))
 import System.Directory (removeFile, renameFile)
 import System.FilePath ((<.>))
 import System.IO (Handle, IOMode (ReadWriteMode), SeekMode (AbsoluteSeek, SeekFromEnd), hClose,
-                  hFileSize, hFlush, hSeek)
+                  hFileSize, hFlush, hSeek, hSetEncoding, utf8)
 import System.Wlog.FileUtils (whenExist)
 import System.Wlog.Formatter (LogFormatter, nullFormatter)
 import System.Wlog.LoggerConfig (RotationParameters (..), isValidRotation)
@@ -65,6 +65,7 @@ rollerReadback RollerHandler{..} logsNum = liftIO $ do
         contents <- T.lines <$> TIO.hGetContents h
         hClose h
         h' <- openFile rhFileName ReadWriteMode
+        hSetEncoding h' utf8
         hSeek h' SeekFromEnd 0
         pure (h', take logsNum $ reverse contents)
 
@@ -96,6 +97,7 @@ rollerWriting RotationParameters{..} handlerPath loggingAction varHandle _ msg =
             let lastLogFile = logIndex handlerPath lastIndex
             whenExist lastLogFile removeFile
             h <- openFile handlerPath ReadWriteMode
+            hSetEncoding h utf8
             hSeek h SeekFromEnd 0
             pure h
 
