@@ -31,7 +31,8 @@ import Data.Text.Lazy.Builder as B
 import Data.Typeable (Typeable)
 import System.Directory (createDirectoryIfMissing)
 import System.FilePath (takeDirectory)
-import System.IO (Handle, IOMode (ReadWriteMode), SeekMode (SeekFromEnd), hClose, hFlush, hSeek, hSetEncoding, utf8)
+import System.IO (Handle, IOMode (ReadWriteMode), SeekMode (SeekFromEnd), hClose, hFlush, hSeek,
+                  hSetEncoding, utf8)
 
 import System.Wlog.Formatter (LogFormatter, nullFormatter)
 import System.Wlog.LogHandler (LogHandler (..), LogHandlerTag (..))
@@ -99,6 +100,7 @@ streamHandler :: Handle
               -> Severities
               -> IO (GenericHandler Handle)
 streamHandler privData writeAction lock severities = do
+    hSetEncoding privData utf8
     (writeFunc, readBackBuffer) <- createWriteFuncWrapper writeAction lock
     return GenericHandler
         { formatter = nullFormatter
@@ -114,7 +116,6 @@ fileHandler :: FilePath -> Severities -> IO (GenericHandler Handle)
 fileHandler fp sev = do
     createDirectoryIfMissing True (takeDirectory fp)
     h <- openFile fp ReadWriteMode
-    hSetEncoding h utf8
     hSeek h SeekFromEnd 0
 
     lock <- newMVar ()
