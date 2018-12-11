@@ -39,8 +39,6 @@ library
                        System.Wlog.PureLogging
                        System.Wlog.Severity
                        System.Wlog.Terminal
-  if impl(ghc >= 8.2.2)
-     exposed-modules:  System.Wlog.Concurrent
 
   other-modules:       System.Wlog.Color
                        System.Wlog.MemoryQueue
