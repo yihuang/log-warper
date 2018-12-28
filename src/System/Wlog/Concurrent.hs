@@ -68,16 +68,16 @@ logWarningLongAction logFunc delta actionTag action =
         let waitLoop :: Time Second -> m ()
             waitLoop acc = do
                 delayAndPrint s acc
-                waitLoop (acc + s)
+                waitLoop (acc <> s)
         in waitLoop s
     waitAndWarn (WaitGeometric ms k) =
         let waitLoop :: Time Second -> Time Second -> m ()
             waitLoop acc delayT = do
-                let newAcc    = acc + delayT
+                let newAcc    = acc <> delayT
                 let newDelayT = k `timeMul` delayT
                 delayAndPrint delayT newAcc
                 waitLoop newAcc newDelayT
-        in waitLoop 0 ms
+        in waitLoop mempty ms
 
     delayAndPrint :: Time Second -> Time Second -> m ()
     delayAndPrint delayT printT = do

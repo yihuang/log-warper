@@ -22,6 +22,7 @@ import System.Wlog (CanLog, atLogger, defaultConfig, infoPlus, launchFromFile, l
                     logDebug, logError, logInfo, logNotice, logWarning, ltSeverity,
                     modifyLoggerName, parseLoggerConfig, productionB, usingLoggerName)
 #if ( __GLASGOW_HASKELL__ >= 802 )
+import Time (Time(..))
 import System.Wlog (WithLoggerIO, launchSimpleLogging, logWarningWaitInf)
 #endif
 
@@ -71,7 +72,7 @@ main = do
     launchSimpleLogging "concurrent" concurrentActions
 
 concurrentActions :: forall m . (WithLoggerIO m, MonadBaseControl IO m) => m ()
-concurrentActions = logWarningWaitInf 2 "stupid action" someStupidAction
+concurrentActions = logWarningWaitInf (Time 2) "stupid action" someStupidAction
   where
     someStupidAction :: m ()
     someStupidAction = replicateM_ 10 $ do
